@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content4Food | Food Content Marketplace</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div id="root">
+        <nav>
+            <div class="logo"><span class="logo-c4">Content4</span><span class="logo-food">Food</span></div>
+            <div class="nav-links">
+                <button class="nl-btn on" onclick="nav('home',this)">Home</button>
+                <button class="nl-btn" onclick="nav('creators',this)">Find Creators</button>
+                <button class="nl-btn" onclick="nav('jobs',this)">Browse Jobs</button>
+                <button class="nl-btn" onclick="nav('pricing',this)">Pricing</button>
+                <button class="nl-btn" onclick="nav('how',this)">How it works</button>
+            </div>
+            <div class="nav-right">
+                <button class="btn btn-ghost">Sign in</button>
+                <button class="btn btn-green">Get started</button>
+            </div>
+        </nav>
+
+        <div id="home">
+            <div class="hero">
+                <div class="hero-inner">
+                    <div class="pill"><div class="pill-dot"></div>The marketplace built for food content</div>
+                    <h1>Food content creators.<br><span class="h1-orange">Food businesses.</span><br><span class="h1-green">One platform.</span></h1>
+                    <p class="hero-sub">Content4Food connects skilled food content creators — photographers, videographers, UGC creators, and editors — with restaurants, food trucks, and food events that need their work.</p>
+                    <div class="hero-btns">
+                        <button class="btn btn-green btn-lg" onclick="nav('creators',document.querySelectorAll('.nl-btn')[1])">Find a creator</button>
+                        <button class="btn btn-orange btn-lg" onclick="nav('jobs',document.querySelectorAll('.nl-btn')[2])">Browse open jobs</button>
+                    </div>
+                    <div class="dual-card">
+                        <div class="dc dc-green">
+                            <div class="dc-eyebrow">For content creators</div>
+                            <h3>Get paid to shoot food</h3>
+                            <p>Build your profile, apply to real gigs from food businesses, and earn based on your work — not your ad budget.</p>
+                        </div>
+                        <div class="dc dc-orange">
+                            <div class="dc-eyebrow">For food businesses</div>
+                            <h3>Find creators who get food</h3>
+                            <p>Post a job and connect with vetted food content creators near you. Reels, photos, live coverage — all in one place.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat"><div class="stat-n">1,400+</div><div class="stat-l">Verified creators</div></div>
+                <div class="stat"><div class="stat-n">920+</div><div class="stat-l">Food businesses</div></div>
+                <div class="stat"><div class="stat-n">4,200+</div><div class="stat-l">Jobs completed</div></div>
+                <div class="stat"><div class="stat-n">4.9 ★</div><div class="stat-l">Avg. rating</div></div>
+            </div>
+            <section>
+                <div class="sec-hd"><div class="sec-title">Featured creators</div><span class="sec-sub">Ranked organically</span></div>
+                <div class="cgrid" id="home-cg"></div>
+            </section>
+            <section>
+                <div class="sec-hd"><div class="sec-title">Open jobs</div><span class="sec-sub">Posted by verified businesses</span></div>
+                <div class="jlist" id="home-jl"></div>
+            </section>
+        </div>
+
+        <div id="creators" style="display:none">
+            <div class="panel">
+                <div class="panel-title">Food content creators</div>
+                <div class="chips" id="creator-chips">
+                    <button class="chip on" onclick="filterC(this,'all')">All</button>
+                    <button class="chip" onclick="filterC(this,'video')">Video & Reels</button>
+                    <button class="chip" onclick="filterC(this,'photo')">Photography</button>
+                    <button class="chip" onclick="filterC(this,'ugc')">UGC</button>
+                </div>
+                <div class="cgrid" id="all-cg"></div>
+            </div>
+        </div>
+
+        <div id="jobs" style="display:none">
+            <div class="panel">
+                <div class="panel-title">Open jobs</div>
+                <div class="jlist" id="all-jl"></div>
+            </div>
+        </div>
+
+        <div id="pricing" style="display:none">
+            <div class="panel">
+                <div class="panel-title">Simple, fair pricing</div>
+                <!-- Pricing content truncated for structure clarity -->
+            </div>
+        </div>
+
+        <div id="how" style="display:none">
+            <div class="panel">
+                <div class="panel-title">How Content4Food works</div>
+                <!-- How it works content truncated for structure clarity -->
+            </div>
+        </div>
+
+        <div class="cta-wrap" id="cta">
+            <div class="cta-grid">
+                <div class="cta-c cta-green">
+                    <h3>Ready to get booked?</h3>
+                    <button class="btn btn-green">Join as a creator ↗</button>
+                </div>
+                <div class="cta-c cta-orange">
+                    <h3>Need food content?</h3>
+                    <button class="btn btn-orange">Post a job ↗</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="flogo"><span class="flogo-c">Content4</span><span class="flogo-f">Food</span></div>
+            <div class="fcopy">© 2025 Content4Food LLC. All rights reserved.</div>
+        </footer>
+    </div>
+    <script type="module" src="src/js/main.js"></script>
+</body>
+</html>
