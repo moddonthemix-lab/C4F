@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content4Food | Food Content Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div id="root">
+        <nav>
+            <button type="button" class="logo logo-btn" onclick="goHome()" aria-label="Content4Food home"><span class="logo-c4">Content4</span><span class="logo-food">Food</span></button>
+            <div class="nav-links">
+                <button type="button" class="nl-btn on" onclick="nav('home',this)">Home</button>
+                <button type="button" class="nl-btn" onclick="nav('creators',this)">Find Creators</button>
+                <button type="button" class="nl-btn" onclick="nav('jobs',this)">Browse Jobs</button>
+                <button type="button" class="nl-btn" onclick="nav('pricing',this)">Pricing</button>
+                <button type="button" class="nl-btn" onclick="nav('how',this)">How it works</button>
+                <button type="button" class="nl-btn" data-nav="contact" onclick="nav('contact',this)">Contact</button>
+            </div>
+            <div class="nav-right">
+                <div class="nav-auth-slot" id="nav-guest">
+                    <button type="button" class="btn btn-ghost nav-cta" onclick="showView('signin')">Sign in</button>
+                    <button type="button" class="btn btn-green nav-cta" onclick="showView('signup-role')">Get started</button>
+                </div>
+                <div class="nav-auth-slot nav-auth-slot--user" id="nav-user" hidden>
+                    <span class="nav-user-label" id="nav-user-label" title=""></span>
+                    <button type="button" class="btn btn-ghost btn-sm nav-cta" onclick="goDashboard()">Dashboard</button>
+                    <button type="button" class="btn btn-ghost btn-sm nav-cta" onclick="logout()">Log out</button>
+                </div>
+            </div>
+        </nav>
+
+        <div id="home">
+            <div class="hero">
+                <div class="hero-inner">
+                    <div class="pill"><div class="pill-dot"></div>The marketplace built for food content</div>
+                    <h1>Food content creators.<br><span class="h1-orange">Food businesses.</span><br><span class="h1-green">One platform.</span></h1>
+                    <p class="hero-sub">Content4Food connects skilled food content creators — photographers, videographers, UGC creators, and editors — with restaurants, food trucks, and food events that need their work.</p>
+                    <div class="hero-btns">
+                        <button class="btn btn-green btn-lg" onclick="nav('creators',document.querySelectorAll('.nl-btn')[1])">Find a creator</button>
+                        <button class="btn btn-orange btn-lg" onclick="nav('jobs',document.querySelectorAll('.nl-btn')[2])">Browse open jobs</button>
+                    </div>
+                    <div class="dual-card">
+                        <div class="dc dc-green">
+                            <div class="dc-eyebrow">For content creators</div>
+                            <h3>Get paid to shoot food</h3>
+                            <p>Build your profile, apply to real gigs from food businesses, and earn based on your work — not your ad budget.</p>
+                        </div>
+                        <div class="dc dc-orange">
+                            <div class="dc-eyebrow">For food businesses</div>
+                            <h3>Find creators who get food</h3>
+                            <p>Post a job and connect with vetted food content creators near you. Reels, photos, live coverage — all in one place.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat"><div class="stat-n">1,400+</div><div class="stat-l">Verified creators</div></div>
+                <div class="stat"><div class="stat-n">920+</div><div class="stat-l">Food businesses</div></div>
+                <div class="stat"><div class="stat-n">4,200+</div><div class="stat-l">Jobs completed</div></div>
+                <div class="stat"><div class="stat-n">4.9 ★</div><div class="stat-l">Avg. rating</div></div>
+            </div>
+            <section>
+                <div class="sec-hd"><div class="sec-title">Featured creators</div><span class="sec-sub">Ranked organically</span></div>
+                <div class="cgrid" id="home-cg"></div>
+            </section>
+            <section>
+                <div class="sec-hd"><div class="sec-title">Open jobs</div><span class="sec-sub">Posted by verified businesses</span></div>
+                <div class="jlist" id="home-jl"></div>
+            </section>
+        </div>
+
+        <div id="creators" style="display:none">
+            <div class="panel">
+                <div class="panel-head">
+                    <div class="panel-title">Food content creators</div>
+                    <p class="panel-sub">Search and sort run in the browser today — plug in an API response later without changing the UI.</p>
+                </div>
+                <div class="panel-toolbar">
+                    <label class="toolbar-field toolbar-field--grow">
+                        <span class="sr-only">Search creators</span>
+                        <input type="search" class="field-input toolbar-input" id="creator-search" placeholder="Search name, city, specialty…" autocomplete="off">
+                    </label>
+                    <label class="toolbar-field">
+                        <span class="toolbar-label">Sort</span>
+                        <select class="field-input toolbar-select" id="creator-sort">
+                            <option value="rating-desc">Rating (high → low)</option>
+                            <option value="rating-asc">Rating (low → high)</option>
+                            <option value="jobs-desc">Completed jobs (high → low)</option>
+                            <option value="jobs-asc">Completed jobs (low → high)</option>
+                            <option value="name-asc">Name (A–Z)</option>
+                            <option value="name-desc">Name (Z–A)</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="chips" id="creator-chips">
+                    <button type="button" class="chip on" onclick="filterC(this,'all')">All</button>
+                    <button type="button" class="chip" onclick="filterC(this,'video')">Video & Reels</button>
+                    <button type="button" class="chip" onclick="filterC(this,'photo')">Photography</button>
+                    <button type="button" class="chip" onclick="filterC(this,'ugc')">UGC</button>
+                </div>
+                <div class="cgrid" id="all-cg"></div>
+                <p class="panel-empty" id="creator-empty" hidden>No creators match your filters.</p>
+            </div>
+        </div>
+
+        <div id="jobs" style="display:none">
+            <div class="panel">
+                <div class="panel-head">
+                    <div class="panel-title">Open jobs</div>
+                    <p class="panel-sub" id="jobs-panel-sub-guest">Browse open roles posted by food businesses. <strong>Sign in</strong> to search, filter by job type, and sort results.</p>
+                    <p class="panel-sub" id="jobs-panel-sub-auth" hidden>Search and filters apply to the sample job list — swap in your API response later.</p>
+                </div>
+                <div class="jobs-guest-hint card card-pad" id="jobs-browse-guest">
+                    <p class="jobs-guest-hint__text">Sign in to unlock search, job-type filters, and sorting on this page.</p>
+                    <button type="button" class="btn btn-green btn-sm" onclick="showView('signin')">Sign in</button>
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="showView('signup-role')">Create account</button>
+                </div>
+                <div class="panel-toolbar" id="jobs-browse-tools" hidden>
+                    <label class="toolbar-field toolbar-field--grow">
+                        <span class="sr-only">Search jobs</span>
+                        <input type="search" class="field-input toolbar-input" id="job-search" placeholder="Search title, business, city…" autocomplete="off">
+                    </label>
+                    <label class="toolbar-field">
+                        <span class="toolbar-label">Job type</span>
+                        <select class="field-input toolbar-select" id="job-kind">
+                            <option value="all">All types</option>
+                            <option value="once">One-time</option>
+                            <option value="ongoing">Ongoing</option>
+                        </select>
+                    </label>
+                    <label class="toolbar-field">
+                        <span class="toolbar-label">Sort</span>
+                        <select class="field-input toolbar-select" id="job-sort">
+                            <option value="pay-desc">Budget (high → low)</option>
+                            <option value="pay-asc">Budget (low → high)</option>
+                            <option value="title-asc">Title (A–Z)</option>
+                            <option value="city-asc">City (A–Z)</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="jlist" id="all-jl"></div>
+                <p class="panel-empty" id="job-empty" hidden>No jobs match your filters.</p>
+            </div>
+        </div>
+
+        <div id="pricing" style="display:none">
+            <section class="pricing-page" aria-labelledby="pricing-heading">
+                <div class="pricing-inner">
+                    <header class="pricing-header">
+                        <h1 id="pricing-heading" class="pricing-heading">Simple, fair pricing</h1>
+                        <p class="pricing-lede">Free accounts with verification on both sides, then a simple yearly membership. No boosted listings. No pay-to-rank. Discovery is 100% merit-based.</p>
+                    </header>
+
+                    <div class="pricing-cards">
+                        <article class="price-card price-card--creator">
+                            <p class="price-card__eyebrow">For content creators</p>
+                            <p class="price-card__free-tier">Free account with verification</p>
+                            <p class="price-card__price"><span class="price-card__currency">$</span>49<span class="price-card__suffix">.99</span></p>
+                            <p class="price-card__period">membership per year</p>
+                            <p class="price-card__annual">Join free, complete verification, then activate full access with annual membership.</p>
+                            <ul class="price-card__list">
+                                <li><span class="price-check price-check--creator" aria-hidden="true"></span> Verified profile with portfolio hosting</li>
+                                <li><span class="price-check price-check--creator" aria-hidden="true"></span> Unlimited job applications</li>
+                                <li><span class="price-check price-check--creator" aria-hidden="true"></span> Direct messaging with businesses</li>
+                                <li><span class="price-check price-check--creator" aria-hidden="true"></span> Booking &amp; contract tools</li>
+                                <li><span class="price-check price-check--creator" aria-hidden="true"></span> Secure payment processing</li>
+                                <li><span class="price-check price-check--creator" aria-hidden="true"></span> Profile analytics &amp; view tracking</li>
+                                <li><span class="price-check price-check--creator" aria-hidden="true"></span> Two-way ratings after every job</li>
+                            </ul>
+                            <button type="button" class="price-card__btn" onclick="nav('creators', document.querySelectorAll('.nl-btn')[1])">Join as a creator</button>
+                        </article>
+
+                        <article class="price-card price-card--business">
+                            <p class="price-card__eyebrow">For food businesses</p>
+                            <p class="price-card__free-tier">Free account with verification</p>
+                            <p class="price-card__price"><span class="price-card__currency">$</span>199<span class="price-card__suffix">.99</span></p>
+                            <p class="price-card__period">membership per year</p>
+                            <p class="price-card__annual">Join free, verify your business, then activate posting and hiring tools with annual membership.</p>
+                            <ul class="price-card__list">
+                                <li><span class="price-check price-check--business" aria-hidden="true"></span> Verified business profile &amp; unlimited job postings</li>
+                                <li><span class="price-check price-check--business" aria-hidden="true"></span> Full creator profile &amp; portfolio access</li>
+                                <li><span class="price-check price-check--business" aria-hidden="true"></span> Direct messaging with creators</li>
+                                <li><span class="price-check price-check--business" aria-hidden="true"></span> Invite specific creators to apply</li>
+                                <li><span class="price-check price-check--business" aria-hidden="true"></span> Booking &amp; contract management</li>
+                                <li><span class="price-check price-check--business" aria-hidden="true"></span> Secure escrow payment processing</li>
+                                <li><span class="price-check price-check--business" aria-hidden="true"></span> Two-way ratings after every job</li>
+                            </ul>
+                            <button type="button" class="price-card__btn" onclick="nav('jobs', document.querySelectorAll('.nl-btn')[2])">Join as a business</button>
+                        </article>
+                    </div>
+
+                    <div class="fee-banner">
+                        <div class="fee-banner__icon" aria-hidden="true">%</div>
+                        <p class="fee-banner__text"><strong>9% completion fee</strong> on every job. This covers secure escrow, payment processing, and dispute resolution — not profit boosting. It keeps both sides accountable to finishing what they start, on-platform.</p>
+                    </div>
+
+                    <div class="pricing-bottom-cta">
+                        <div class="pricing-cta pricing-cta--creator">
+                            <h2 class="pricing-cta__title">Ready to get booked?</h2>
+                            <p class="pricing-cta__body">Join 1,400+ food content creators already earning on Content4Food. Your next gig is based on your work — not your wallet.</p>
+                            <button type="button" class="pricing-cta__btn" onclick="nav('creators', document.querySelectorAll('.nl-btn')[1])">Join as a creator <span class="pricing-cta__arrow" aria-hidden="true">↗</span></button>
+                        </div>
+                        <div class="pricing-cta pricing-cta--business">
+                            <h2 class="pricing-cta__title">Need food content?</h2>
+                            <p class="pricing-cta__body">Post a job and connect with vetted food content creators near you. Quality discovery, fair marketplace, real results.</p>
+                            <button type="button" class="pricing-cta__btn" onclick="nav('jobs', document.querySelectorAll('.nl-btn')[2])">Post a job <span class="pricing-cta__arrow" aria-hidden="true">↗</span></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="how" style="display:none">
+            <section class="how-page" aria-labelledby="how-heading">
+                <div class="how-inner">
+                    <h1 id="how-heading" class="how-heading">How it works</h1>
+
+                    <div class="how-columns">
+                        <div class="how-col how-col--creators">
+                            <h2 class="how-col__title">For food content creators</h2>
+                            <ol class="how-steps">
+                                <li class="how-step">
+                                    <span class="how-step__n how-step__n--creator">1</span>
+                                    <div class="how-step__body">
+                                        <p class="how-step__title"><strong>Build your profile.</strong></p>
+                                        <p class="how-step__desc">Add your niche, portfolio, rates, and availability. Get verified with a quick review.</p>
+                                    </div>
+                                </li>
+                                <li class="how-step">
+                                    <span class="how-step__n how-step__n--creator">2</span>
+                                    <div class="how-step__body">
+                                        <p class="how-step__title"><strong>Browse &amp; apply to jobs.</strong></p>
+                                        <p class="how-step__desc">Filter by type, location, and pay. Send a pitch directly to the business — no middleman.</p>
+                                    </div>
+                                </li>
+                                <li class="how-step">
+                                    <span class="how-step__n how-step__n--creator">3</span>
+                                    <div class="how-step__body">
+                                        <p class="how-step__title"><strong>Get hired &amp; deliver.</strong></p>
+                                        <p class="how-step__desc">Agree on scope, shoot the content, deliver through the platform, and get paid securely.</p>
+                                    </div>
+                                </li>
+                                <li class="how-step">
+                                    <span class="how-step__n how-step__n--creator">4</span>
+                                    <div class="how-step__body">
+                                        <p class="how-step__title"><strong>Build your reputation.</strong></p>
+                                        <p class="how-step__desc">Collect ratings from every job. Higher ratings and more completed jobs = better organic discovery.</p>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div class="how-col how-col--business">
+                            <h2 class="how-col__title">For restaurants &amp; food businesses</h2>
+                            <ol class="how-steps">
+                                <li class="how-step">
+                                    <span class="how-step__n how-step__n--business">1</span>
+                                    <div class="how-step__body">
+                                        <p class="how-step__title"><strong>Post your job.</strong></p>
+                                        <p class="how-step__desc">Describe what you need — a reel, photo set, live event coverage, or ongoing content partnership.</p>
+                                    </div>
+                                </li>
+                                <li class="how-step">
+                                    <span class="how-step__n how-step__n--business">2</span>
+                                    <div class="how-step__body">
+                                        <p class="how-step__title"><strong>Review applicants.</strong></p>
+                                        <p class="how-step__desc">Browse pitches by portfolio, rating, and experience. Message creators directly before committing.</p>
+                                    </div>
+                                </li>
+                                <li class="how-step">
+                                    <span class="how-step__n how-step__n--business">3</span>
+                                    <div class="how-step__body">
+                                        <p class="how-step__title"><strong>Book and brief them.</strong></p>
+                                        <p class="how-step__desc">Confirm scope and deliverables through the platform. Funds held in escrow until content is approved.</p>
+                                    </div>
+                                </li>
+                                <li class="how-step">
+                                    <span class="how-step__n how-step__n--business">4</span>
+                                    <div class="how-step__body">
+                                        <p class="how-step__title"><strong>Approve &amp; release payment.</strong></p>
+                                        <p class="how-step__desc">Approve the content, release payment, and leave a rating. Your rating as a client matters too.</p>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <aside class="how-ranking">
+                        <h2 class="how-ranking__title">How organic ranking works</h2>
+                        <p class="how-ranking__body">Discovery order reflects completed jobs, average ratings, and response times — not who pays more for a subscription or ads. Consistent quality and reliability move you up; everyone is ranked on outcomes.</p>
+                    </aside>
+                </div>
+            </section>
+        </div>
+
+        <div id="contact" style="display:none">
+            <section class="content-page" aria-labelledby="contact-heading">
+                <div class="content-inner content-inner--narrow">
+                    <h1 id="contact-heading" class="content-title">Contact</h1>
+                    <p class="content-lede">Questions about Content4Food? Reach out—we will tune routing (email, ticketing, etc.) before launch.</p>
+                    <div class="contact-grid">
+                        <div class="card card-pad">
+                            <h2 class="content-h2">Message us</h2>
+                            <p class="muted">Form placeholder; connect to your inbox or support tool later.</p>
+                            <label class="field"><span class="field-label">Name</span><input type="text" class="field-input" id="contact-name" autocomplete="name" placeholder="Your name"></label>
+                            <label class="field"><span class="field-label">Email</span><input type="email" class="field-input" id="contact-email" autocomplete="email" placeholder="you@company.com"></label>
+                            <label class="field"><span class="field-label">Message</span><textarea class="field-input field-textarea" id="contact-msg" rows="5" placeholder="How can we help?"></textarea></label>
+                            <button type="button" class="btn btn-green btn-block" onclick="contactFormDemo()">Send message</button>
+                        </div>
+                        <aside class="card card-pad contact-aside">
+                            <h2 class="content-h2">Other ways</h2>
+                            <p><strong>Email (placeholder):</strong> <a class="text-link" href="mailto:hello@content4food.com">hello@content4food.com</a></p>
+                            <p class="muted small">Replace with your real support address. For urgent payment or safety issues, we will add a dedicated line in Trust &amp; safety.</p>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="trust-safety" style="display:none">
+            <section class="content-page" aria-labelledby="ts-heading">
+                <div class="content-inner">
+                    <h1 id="ts-heading" class="content-title">Trust &amp; safety</h1>
+                    <p class="content-lede">How we think about safety on Content4Food. Full policies will expand as we move toward launch—this page is a living outline.</p>
+                    <div class="content-blocks">
+                        <div class="content-block card card-pad">
+                            <h2 class="content-h2">Community standards</h2>
+                            <p>We expect respectful communication, honest profiles, and work delivered as agreed. Harassment, fraud, and off-platform payment pressure to evade fees undermine the marketplace for everyone.</p>
+                        </div>
+                        <div class="content-block card card-pad">
+                            <h2 class="content-h2">Verification</h2>
+                            <p>Creators and businesses go through review so people on the platform are who they say they are. Verification status will be shown clearly on profiles; requirements may vary by role and region.</p>
+                        </div>
+                        <div class="content-block card card-pad">
+                            <h2 class="content-h2">Reporting &amp; disputes</h2>
+                            <p>Users will be able to report behavior that breaks our rules. Job-related disagreements should be raised in-product first; we are designing an escalation path for payment and deliverable disputes. Details TBD.</p>
+                        </div>
+                        <div class="content-block card card-pad">
+                            <h2 class="content-h2">Payments</h2>
+                            <p>We plan to use platform-mediated payments so both sides are protected. Never send payment off-platform to someone you only know through a message—scams are a real risk in marketplaces.</p>
+                        </div>
+                    </div>
+                    <p class="content-foot-actions">
+                        <button type="button" class="btn btn-outline-sm" onclick="nav('guidelines', null)">Content guidelines</button>
+                        <button type="button" class="btn btn-outline-sm" onclick="showView('report-user')">Report a user</button>
+                        <button type="button" class="btn btn-outline-sm" onclick="showView('report-job')">Report a job</button>
+                        <button type="button" class="btn btn-outline-sm" onclick="showView('dispute')">Dispute intake</button>
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <div id="terms" style="display:none">
+            <section class="content-page content-page--legal" aria-labelledby="terms-heading">
+                <div class="content-inner content-inner--legal">
+                    <h1 id="terms-heading" class="content-title">Terms of Service</h1>
+                    <p class="legal-placeholder"><strong>Placeholder only.</strong> This is not legal advice. Replace this entire page with terms reviewed and approved by qualified counsel for your entity and jurisdiction before you accept users or money.</p>
+                    <div class="legal-prose">
+                        <p>These Terms of Service (“Terms”) are a temporary placeholder for Content4Food. They do not create a binding agreement. A future version will describe eligibility, accounts, fees, intellectual property, limitation of liability, governing law, and dispute resolution.</p>
+                        <p>By using the site in its current demo or beta form, you understand that features, fees, and policies may change. Do not rely on this text for legal or business decisions.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="privacy" style="display:none">
+            <section class="content-page content-page--legal" aria-labelledby="privacy-heading">
+                <div class="content-inner content-inner--legal">
+                    <h1 id="privacy-heading" class="content-title">Privacy Policy</h1>
+                    <p class="legal-placeholder"><strong>Placeholder only.</strong> Replace with a policy that matches your real data practices, regions you serve, and applicable laws (e.g. GDPR, CCPA as applicable).</p>
+                    <div class="legal-prose">
+                        <p>This Privacy Policy is a temporary placeholder. A future version will describe what personal data we collect (e.g. account, profile, messages, payments), how we use it, how long we keep it, who we share it with (such as payment processors), and the choices and rights available to you.</p>
+                        <p>Until a formal policy is published, minimize the personal data you submit to demos and prototypes.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="guidelines" style="display:none">
+            <section class="content-page" aria-labelledby="guidelines-heading">
+                <div class="content-inner">
+                    <h1 id="guidelines-heading" class="content-title">Content guidelines</h1>
+                    <p class="content-lede">What belongs on Content4Food, and what we may remove or escalate. This is a working outline—replace with your full policy as you scale.</p>
+                    <div class="content-blocks">
+                        <div class="content-block card card-pad">
+                            <h2 class="content-h2">Allowed content</h2>
+                            <p>Food-forward portfolios, accurate availability and rates, honest pitches, and professional communication with businesses and creators.</p>
+                        </div>
+                        <div class="content-block card card-pad">
+                            <h2 class="content-h2">Not allowed</h2>
+                            <p>Harassment, hate, sexual content involving minors, scams, impersonation, stolen portfolio work, or attempts to move payments off-platform to avoid fees and protections.</p>
+                        </div>
+                        <div class="content-block card card-pad">
+                            <h2 class="content-h2">Enforcement</h2>
+                            <p>We may warn, restrict, or remove accounts that break these rules. Serious cases can be referred to law enforcement where appropriate.</p>
+                        </div>
+                        <div class="content-block card card-pad">
+                            <h2 class="content-h2">Legal &amp; privacy</h2>
+                            <p>Binding terms and data practices will live in our <button type="button" class="link-btn" onclick="nav('terms', null)">Terms of Service</button> and <button type="button" class="link-btn" onclick="nav('privacy', null)">Privacy Policy</button> once finalized.</p>
+                        </div>
+                    </div>
+                    <p class="content-foot-actions">
+                        <button type="button" class="btn btn-outline-sm" onclick="nav('trust-safety', null)">Trust &amp; safety</button>
+                        <button type="button" class="btn btn-outline-sm" onclick="nav('report-user', null)">Report a profile</button>
+                        <button type="button" class="btn btn-outline-sm" onclick="nav('report-job', null)">Report a job</button>
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <div id="report-user" style="display:none">
+            <div class="flow-page">
+                <div class="flow-inner flow-inner--narrow">
+                    <button type="button" class="flow-back" onclick="nav('guidelines', null)">← Guidelines</button>
+                    <h1 class="flow-title">Report a user</h1>
+                    <p class="flow-hint">Use this for harassment, impersonation, scam attempts, or policy violations. For payment disagreements, prefer <button type="button" class="link-btn" onclick="showView('dispute')">dispute intake</button>.</p>
+                    <input type="hidden" id="ru-slug" value="">
+                    <label class="field"><span class="field-label">Profile (if applicable)</span><input type="text" class="field-input" id="ru-display" readonly placeholder="Select from a profile or leave blank"></label>
+                    <label class="field"><span class="field-label">Reason</span>
+                        <select class="field-input" id="ru-reason">
+                            <option value="">Choose…</option>
+                            <option value="harassment">Harassment or abuse</option>
+                            <option value="impersonation">Impersonation</option>
+                            <option value="scam">Scam or fraud</option>
+                            <option value="ip">Stolen / misrepresented work</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
+                    <label class="field"><span class="field-label">Details</span><textarea class="field-input field-textarea" id="ru-details" rows="5" placeholder="What happened? Include dates and screenshots if you attach files later."></textarea></label>
+                    <button type="button" class="btn btn-green btn-block" onclick="submitReportUser()">Submit report</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="report-job" style="display:none">
+            <div class="flow-page">
+                <div class="flow-inner flow-inner--narrow">
+                    <button type="button" class="flow-back" onclick="nav('jobs', document.querySelectorAll('.nl-btn')[2])">← Jobs</button>
+                    <h1 class="flow-title">Report a job</h1>
+                    <p class="flow-hint">Misleading pay, illegal requests, spam postings, or harassment from a business.</p>
+                    <input type="hidden" id="rj-id" value="">
+                    <label class="field"><span class="field-label">Job</span><input type="text" class="field-input" id="rj-display" readonly placeholder="Select from a listing or describe below"></label>
+                    <label class="field"><span class="field-label">Reason</span>
+                        <select class="field-input" id="rj-reason">
+                            <option value="">Choose…</option>
+                            <option value="misleading">Misleading description or budget</option>
+                            <option value="illegal">Illegal or unsafe request</option>
+                            <option value="spam">Spam / duplicate</option>
+                            <option value="harassment">Harassment</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
+                    <label class="field"><span class="field-label">Details</span><textarea class="field-input field-textarea" id="rj-details" rows="5"></textarea></label>
+                    <button type="button" class="btn btn-orange btn-block" onclick="submitReportJob()">Submit report</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dispute" style="display:none">
+            <div class="flow-page">
+                <div class="flow-inner flow-inner--narrow">
+                    <button type="button" class="flow-back" onclick="nav('trust-safety', null)">← Trust &amp; safety</button>
+                    <h1 class="flow-title">Dispute intake</h1>
+                    <p class="flow-hint">Start a ticket about deliverables, payment release, or scope disagreements. This form is a prototype—production will tie into escrow state and admin workflows.</p>
+                    <label class="field"><span class="field-label">Your role</span>
+                        <select class="field-input" id="dq-role">
+                            <option value="creator">Creator</option>
+                            <option value="business">Business</option>
+                        </select>
+                    </label>
+                    <label class="field"><span class="field-label">Job / contract reference</span><input type="text" class="field-input" id="dq-ref" placeholder="Job title or ID from your dashboard"></label>
+                    <label class="field"><span class="field-label">Issue type</span>
+                        <select class="field-input" id="dq-type">
+                            <option value="deliverable">Deliverable quality / revisions</option>
+                            <option value="payment">Payment / escrow release</option>
+                            <option value="scope">Scope disagreement</option>
+                            <option value="no-show">No-show / cancellation</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
+                    <label class="field"><span class="field-label">Desired outcome</span><textarea class="field-input field-textarea" id="dq-outcome" rows="3" placeholder="What would resolve this for you?"></textarea></label>
+                    <label class="field"><span class="field-label">Timeline</span><textarea class="field-input field-textarea" id="dq-story" rows="5" placeholder="Chronological summary of what happened."></textarea></label>
+                    <button type="button" class="btn btn-green btn-block" onclick="submitDispute()">Submit intake</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="signin" style="display:none">
+            <div class="flow-page">
+                <div class="flow-inner flow-inner--narrow">
+                    <button type="button" class="flow-back" onclick="goHome()">← Home</button>
+                    <h1 class="flow-title">Sign in</h1>
+                    <p class="flow-hint">Demo: use <strong>creator@demo.com</strong>, <strong>business@demo.com</strong>, or <strong>admin@demo.com</strong> — password can be anything.</p>
+                    <label class="field"><span class="field-label">Email</span><input type="email" id="signin-email" class="field-input" autocomplete="username" placeholder="you@example.com"></label>
+                    <label class="field"><span class="field-label">Password</span><input type="password" id="signin-pass" class="field-input" autocomplete="current-password" placeholder="••••••••"></label>
+                    <button type="button" class="btn btn-green btn-block" onclick="submitSignIn()">Sign in</button>
+                    <p class="flow-foot">New here? <button type="button" class="link-btn" onclick="showView('signup-role')">Create an account</button></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="signup-role" style="display:none">
+            <div class="flow-page">
+                <div class="flow-inner">
+                    <button type="button" class="flow-back" onclick="goHome()">← Home</button>
+                    <h1 class="flow-title">Get started</h1>
+                    <p class="flow-lede">Choose how you will use Content4Food.</p>
+                    <div class="role-cards">
+                        <button type="button" class="role-card role-card--creator" onclick="startCreatorSignup()">
+                            <span class="role-card__eyebrow">I create content</span>
+                            <strong class="role-card__title">Food content creator</strong>
+                            <p class="role-card__desc">Add your niche, portfolio, rates, and availability. Apply to jobs and get booked.</p>
+                        </button>
+                        <button type="button" class="role-card role-card--biz" onclick="startBusinessSignup()">
+                            <span class="role-card__eyebrow">I hire creators</span>
+                            <strong class="role-card__title">Restaurant or food business</strong>
+                            <p class="role-card__desc">Post jobs, review applicants, manage escrow, and release payments when work is approved.</p>
+                        </button>
+                    </div>
+                    <p class="flow-foot-subtle"><button type="button" class="link-btn" onclick="showView('signin')">Already have an account? Sign in</button></p>
+                    <p class="flow-foot-subtle"><button type="button" class="link-btn link-btn--muted" onclick="demoAdminLogin()">Platform admin (demo)</button></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="onboard-creator" style="display:none">
+            <div class="flow-page">
+                <div class="flow-inner flow-inner--narrow">
+                    <button type="button" class="flow-back" onclick="showView('signup-role')">← Back</button>
+                    <h1 class="flow-title">Creator onboarding</h1>
+                    <p class="flow-lede flow-lede--sm" id="wiz-c-ind">Step 1 of 4</p>
+                    <div class="wiz-progress"><div class="wiz-progress-fill" id="wiz-c-fill"></div></div>
+
+                    <div class="wiz-step" data-wiz-c="1">
+                        <h2 class="wiz-sh">Niche &amp; basics</h2>
+                        <label class="field"><span class="field-label">Display name</span><input type="text" id="oc-name" class="field-input" placeholder="Alex Martinez"></label>
+                        <label class="field"><span class="field-label">Email</span><input type="email" id="oc-email" class="field-input" placeholder="creator@demo.com"></label>
+                        <fieldset class="field-set">
+                            <legend class="field-label">Specialties (pick any)</legend>
+                            <div class="chip-grid">
+                                <label class="check-chip"><input type="checkbox" name="oc-niche" value="Food photography"> Food photography</label>
+                                <label class="check-chip"><input type="checkbox" name="oc-niche" value="Short-form video"> Short-form video</label>
+                                <label class="check-chip"><input type="checkbox" name="oc-niche" value="UGC"> UGC</label>
+                                <label class="check-chip"><input type="checkbox" name="oc-niche" value="Editing"> Editing</label>
+                                <label class="check-chip"><input type="checkbox" name="oc-niche" value="Live coverage"> Live coverage</label>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="wiz-step" data-wiz-c="2" hidden>
+                        <h2 class="wiz-sh">Portfolio</h2>
+                        <label class="field"><span class="field-label">Upload samples</span><input type="file" id="oc-files" class="field-input" multiple accept="image/*,video/*"></label>
+                        <label class="field"><span class="field-label">Portfolio links</span><textarea id="oc-portfolio" class="field-input field-textarea" rows="4" placeholder="Paste Behance, Drive links, or IG handles — one per line."></textarea></label>
+                    </div>
+
+                    <div class="wiz-step" data-wiz-c="3" hidden>
+                        <h2 class="wiz-sh">Rates</h2>
+                        <label class="field"><span class="field-label">Typical package</span>
+                            <select id="oc-rate-type" class="field-input">
+                                <option value="per-job">Per job / flat fee</option>
+                                <option value="hourly">Hourly</option>
+                                <option value="day-rate">Day rate</option>
+                            </select>
+                        </label>
+                        <div class="field-row">
+                            <label class="field"><span class="field-label">Min ($)</span><input type="number" id="oc-rate-min" class="field-input" min="0" placeholder="120"></label>
+                            <label class="field"><span class="field-label">Max ($)</span><input type="number" id="oc-rate-max" class="field-input" min="0" placeholder="350"></label>
+                        </div>
+                    </div>
+
+                    <div class="wiz-step" data-wiz-c="4" hidden>
+                        <h2 class="wiz-sh">Availability</h2>
+                        <fieldset class="field-set">
+                            <legend class="field-label">Days you usually shoot</legend>
+                            <div class="chip-grid">
+                                <label class="check-chip"><input type="checkbox" name="oc-day" value="Mon"> Mon</label>
+                                <label class="check-chip"><input type="checkbox" name="oc-day" value="Tue"> Tue</label>
+                                <label class="check-chip"><input type="checkbox" name="oc-day" value="Wed"> Wed</label>
+                                <label class="check-chip"><input type="checkbox" name="oc-day" value="Thu"> Thu</label>
+                                <label class="check-chip"><input type="checkbox" name="oc-day" value="Fri"> Fri</label>
+                                <label class="check-chip"><input type="checkbox" name="oc-day" value="Sat"> Sat</label>
+                                <label class="check-chip"><input type="checkbox" name="oc-day" value="Sun"> Sun</label>
+                            </div>
+                        </fieldset>
+                        <label class="field field--check"><input type="checkbox" id="oc-open" checked> <span>Taking new clients</span></label>
+                    </div>
+
+                    <div class="wiz-actions">
+                        <button type="button" class="btn btn-ghost" id="wiz-c-prev" onclick="wizCreatorPrev()" hidden>Back</button>
+                        <button type="button" class="btn btn-green" id="wiz-c-next" onclick="wizCreatorNext()">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="onboard-business" style="display:none">
+            <div class="flow-page">
+                <div class="flow-inner flow-inner--narrow">
+                    <button type="button" class="flow-back" onclick="showView('signup-role')">← Back</button>
+                    <h1 class="flow-title">Business onboarding</h1>
+                    <p class="flow-lede flow-lede--sm" id="wiz-b-ind">Step 1 of 3</p>
+                    <div class="wiz-progress"><div class="wiz-progress-fill" id="wiz-b-fill"></div></div>
+
+                    <div class="wiz-step" data-wiz-b="1">
+                        <h2 class="wiz-sh">Business type</h2>
+                        <label class="field"><span class="field-label">Email</span><input type="email" id="ob-email" class="field-input" placeholder="business@demo.com"></label>
+                        <label class="field"><span class="field-label">Business name</span><input type="text" id="ob-name" class="field-input" placeholder="Taco Fuego"></label>
+                        <label class="field"><span class="field-label">Type</span>
+                            <select id="ob-type" class="field-input">
+                                <option value="Restaurant">Restaurant</option>
+                                <option value="Food truck">Food truck</option>
+                                <option value="Catering">Catering</option>
+                                <option value="Brand / product">Brand / product</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="wiz-step" data-wiz-b="2" hidden>
+                        <h2 class="wiz-sh">Location</h2>
+                        <label class="field"><span class="field-label">City</span><input type="text" id="ob-city" class="field-input" placeholder="Miami"></label>
+                        <label class="field"><span class="field-label">State / region</span><input type="text" id="ob-region" class="field-input" placeholder="FL"></label>
+                    </div>
+
+                    <div class="wiz-step" data-wiz-b="3" hidden>
+                        <h2 class="wiz-sh">Primary contact</h2>
+                        <label class="field"><span class="field-label">Contact name</span><input type="text" id="ob-contact" class="field-input" placeholder="Jordan Lee"></label>
+                        <label class="field"><span class="field-label">Phone</span><input type="tel" id="ob-phone" class="field-input" placeholder="+1 …"></label>
+                    </div>
+
+                    <div class="wiz-actions">
+                        <button type="button" class="btn btn-ghost" id="wiz-b-prev" onclick="wizBusinessPrev()" hidden>Back</button>
+                        <button type="button" class="btn btn-orange" id="wiz-b-next" onclick="wizBusinessNext()">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="creator-profile" style="display:none">
+            <div class="flow-page flow-page--profile">
+                <div class="flow-inner">
+                    <button type="button" class="flow-back" onclick="nav('creators', document.querySelectorAll('.nl-btn')[1])">← Creators</button>
+                    <div id="creator-profile-root"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="creator-dash" style="display:none">
+            <div class="dash-page">
+                <div class="dash-inner">
+                    <header class="dash-head dash-head--split">
+                        <div><h1 class="dash-title">Creator dashboard</h1><p class="dash-sub">Track jobs, payouts, and conversations.</p></div>
+                        <button type="button" class="btn btn-outline-sm" onclick="nav('jobs', document.querySelectorAll('.nl-btn')[2])">Browse jobs</button>
+                    </header>
+                    <div class="dash-tabs" role="tablist">
+                        <button type="button" class="dash-tab on" data-dc-tab="jobs" onclick="dashCreatorTab('jobs')">Active jobs</button>
+                        <button type="button" class="dash-tab" data-dc-tab="earn" onclick="dashCreatorTab('earn')">Earnings</button>
+                        <button type="button" class="dash-tab" data-dc-tab="ratings" onclick="dashCreatorTab('ratings')">Ratings</button>
+                        <button type="button" class="dash-tab" data-dc-tab="msgs" onclick="dashCreatorTab('msgs')">Messages</button>
+                    </div>
+                    <div id="dc-panel-jobs" class="dash-panel">
+                        <table class="dash-table">
+                            <thead><tr><th>Job</th><th>Business</th><th>Status</th><th>Due</th></tr></thead>
+                            <tbody id="creator-dash-jobs-body"></tbody>
+                        </table>
+                    </div>
+                    <div id="dc-panel-earn" class="dash-panel" hidden>
+                        <div class="stat-cards">
+                            <div class="stat-card"><span class="stat-card__v" id="creator-earn-mtd">$3,240</span><span class="stat-card__l">This month</span></div>
+                            <div class="stat-card"><span class="stat-card__v">$18.2k</span><span class="stat-card__l">Lifetime</span></div>
+                            <div class="stat-card"><span class="stat-card__v">9%</span><span class="stat-card__l">Platform fee</span></div>
+                        </div>
+                        <p class="dash-note">Sample figures for demo — connect Stripe / payouts in production.</p>
+                    </div>
+                    <div id="dc-panel-ratings" class="dash-panel" hidden>
+                        <div class="rating-big"><span id="creator-dash-rating">4.9</span><span class="rating-big__star">★</span></div>
+                        <p class="dash-note">Based on last 48 completed jobs. Two-way ratings build organic ranking.</p>
+                        <ul class="dash-list" id="creator-dash-reviews"></ul>
+                    </div>
+                    <div id="dc-panel-msgs" class="dash-panel" hidden>
+                        <ul class="msg-list" id="creator-dash-msgs"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="business-dash" style="display:none">
+            <div class="dash-page">
+                <div class="dash-inner">
+                    <header class="dash-head dash-head--split">
+                        <div><h1 class="dash-title">Business dashboard</h1><p class="dash-sub">Postings, applicants, and escrow releases.</p></div>
+                        <button type="button" class="btn btn-orange btn-sm" onclick="showView('post-job')">Post a job</button>
+                    </header>
+                    <div class="dash-tabs" role="tablist">
+                        <button type="button" class="dash-tab on" data-db-tab="post" onclick="dashBizTab('post')">Job postings</button>
+                        <button type="button" class="dash-tab" data-db-tab="apps" onclick="dashBizTab('apps')">Applicants</button>
+                        <button type="button" class="dash-tab" data-db-tab="pay" onclick="dashBizTab('pay')">Payments</button>
+                    </div>
+                    <div id="db-panel-post" class="dash-panel">
+                        <table class="dash-table">
+                            <thead><tr><th>Posting</th><th>Budget</th><th>Status</th><th>Applicants</th><th></th></tr></thead>
+                            <tbody id="biz-dash-post-body"></tbody>
+                        </table>
+                    </div>
+                    <div id="db-panel-apps" class="dash-panel" hidden>
+                        <div id="biz-dash-apps-root"></div>
+                    </div>
+                    <div id="db-panel-pay" class="dash-panel" hidden>
+                        <table class="dash-table">
+                            <thead><tr><th>Job</th><th>In escrow</th><th>Action</th></tr></thead>
+                            <tbody id="biz-dash-pay-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="post-job" style="display:none">
+            <div class="flow-page">
+                <div class="flow-inner flow-inner--narrow">
+                    <button type="button" class="flow-back" onclick="backFromPostJob()">← Dashboard</button>
+                    <h1 class="flow-title">Post a job</h1>
+                    <p class="flow-hint">Describe deliverables so creators can pitch accurately.</p>
+                    <label class="field"><span class="field-label">Job title</span><input type="text" id="pj-title" class="field-input" placeholder="Short-form reels for brunch menu"></label>
+                    <label class="field"><span class="field-label">Content type</span>
+                        <select id="pj-type" class="field-input">
+                            <option value="Short-form video">Short-form video</option>
+                            <option value="Photography">Photography</option>
+                            <option value="UGC">UGC</option>
+                            <option value="Live event">Live event</option>
+                            <option value="Editing">Editing only</option>
+                            <option value="Mixed">Mixed package</option>
+                        </select>
+                    </label>
+                    <label class="field"><span class="field-label">Deliverables</span><textarea id="pj-deliverables" class="field-input field-textarea" rows="5" placeholder="Shot list, platforms, revision rounds, usage rights…"></textarea></label>
+                    <div class="field-row">
+                        <label class="field"><span class="field-label">Budget ($)</span><input type="number" id="pj-budget" class="field-input" min="0" placeholder="250"></label>
+                        <label class="field"><span class="field-label">Timeline</span>
+                            <select id="pj-timeline" class="field-input">
+                                <option value="Rush (~1 week)">Rush (~1 week)</option>
+                                <option value="Standard (2–4 weeks)">Standard (2–4 weeks)</option>
+                                <option value="Flexible">Flexible</option>
+                            </select>
+                        </label>
+                    </div>
+                    <button type="button" class="btn btn-orange btn-block" onclick="submitPostJob()">Publish job</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="admin-dash" style="display:none">
+            <div class="dash-page dash-page--admin">
+                <div class="dash-inner dash-inner--wide">
+                    <header class="dash-head">
+                        <div>
+                            <h1 class="dash-title">Admin console</h1>
+                            <p class="dash-sub">Wireframe for queues, detail review, and metrics—primary actions stay disabled until backed by APIs.</p>
+                        </div>
+                        <span class="admin-env-badge" title="No production writes">Sandbox UI</span>
+                    </header>
+
+                    <div class="admin-shell">
+                        <nav class="admin-tabbar" role="tablist" aria-label="Admin sections">
+                            <button type="button" class="admin-tab on" id="admin-tab-btn-verify" data-admin-tab="verify" onclick="adminSwitchTab('verify')">Verification</button>
+                            <button type="button" class="admin-tab" id="admin-tab-btn-disputes" data-admin-tab="disputes" onclick="adminSwitchTab('disputes')">Disputes</button>
+                            <button type="button" class="admin-tab" id="admin-tab-btn-reports" data-admin-tab="reports" onclick="adminSwitchTab('reports')">Reports</button>
+                            <button type="button" class="admin-tab" id="admin-tab-btn-revenue" data-admin-tab="revenue" onclick="adminSwitchTab('revenue')">Revenue</button>
+                            <button type="button" class="admin-tab" id="admin-tab-btn-activity" data-admin-tab="activity" onclick="adminSwitchTab('activity')">Activity</button>
+                            <button type="button" class="admin-tab admin-tab--soon" disabled title="Coming soon">Settings</button>
+                        </nav>
+
+                        <div id="admin-panel-verify" class="admin-panel">
+                            <div class="queue-toolbar">
+                                <span class="queue-toolbar__meta" id="admin-verify-count">0 items</span>
+                                <button type="button" class="btn btn-outline-sm" disabled title="Coming soon">Bulk assign</button>
+                                <button type="button" class="btn btn-outline-sm" disabled title="Coming soon">Export CSV</button>
+                            </div>
+                            <div class="table-scroll">
+                                <table class="dash-table dash-table--compact admin-queue-table">
+                                    <thead><tr><th>Creator</th><th>Niche</th><th>Submitted</th><th></th></tr></thead>
+                                    <tbody id="admin-pending-body"></tbody>
+                                </table>
+                            </div>
+                            <p class="dash-note">Row opens a detail drawer. Approve / reject will connect to your verification service.</p>
+                        </div>
+
+                        <div id="admin-panel-disputes" class="admin-panel" hidden>
+                            <div class="queue-toolbar">
+                                <span class="queue-toolbar__meta">Open tickets (sample)</span>
+                                <button type="button" class="btn btn-outline-sm" disabled title="Coming soon">Create ticket</button>
+                            </div>
+                            <div class="table-scroll">
+                                <table class="dash-table dash-table--compact admin-queue-table">
+                                    <thead><tr><th>ID</th><th>Parties</th><th>Status</th><th></th></tr></thead>
+                                    <tbody id="admin-disputes-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="admin-panel-reports" class="admin-panel" hidden>
+                            <div class="queue-toolbar">
+                                <span class="queue-toolbar__meta">User &amp; job reports (sample)</span>
+                                <button type="button" class="btn btn-outline-sm" disabled title="Coming soon">Filters</button>
+                            </div>
+                            <div class="table-scroll">
+                                <table class="dash-table dash-table--compact admin-queue-table">
+                                    <thead><tr><th>ID</th><th>Type</th><th>Target</th><th>Severity</th><th></th></tr></thead>
+                                    <tbody id="admin-reports-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="admin-panel-revenue" class="admin-panel" hidden>
+                            <div class="stat-cards stat-cards--admin admin-revenue-cards">
+                                <div class="stat-card"><span class="stat-card__v">$42.8k</span><span class="stat-card__l">MTD fees</span></div>
+                                <div class="stat-card"><span class="stat-card__v">$512k</span><span class="stat-card__l">YTD</span></div>
+                                <div class="stat-card"><span class="stat-card__v">9%</span><span class="stat-card__l">Avg take rate</span></div>
+                            </div>
+                            <p class="dash-note">Charts and cohort breakdowns — <strong>coming soon</strong> (wire Stripe / ledger).</p>
+                            <button type="button" class="btn btn-outline-sm" disabled title="Coming soon">Download finance export</button>
+                        </div>
+
+                        <div id="admin-panel-activity" class="admin-panel" hidden>
+                            <ul class="activity-feed" id="admin-activity"></ul>
+                            <button type="button" class="btn btn-outline-sm" disabled title="Coming soon">View full audit log</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-drawer" class="admin-drawer" hidden aria-hidden="true">
+                    <div class="admin-drawer__backdrop" onclick="closeAdminDrawer()"></div>
+                    <aside class="admin-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="admin-drawer-title">
+                        <div class="admin-drawer__head">
+                            <h2 class="admin-drawer__title" id="admin-drawer-title">Detail</h2>
+                            <button type="button" class="admin-drawer__close" onclick="closeAdminDrawer()" aria-label="Close panel">×</button>
+                        </div>
+                        <div class="admin-drawer__body" id="admin-drawer-body"></div>
+                        <div class="admin-drawer__foot">
+                            <button type="button" class="btn btn-ghost btn-sm" disabled title="Coming soon">Escalate</button>
+                            <button type="button" class="btn btn-green btn-sm" disabled title="Coming soon">Approve</button>
+                            <button type="button" class="btn btn-orange btn-sm" disabled title="Coming soon">Reject</button>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-wrap" id="cta">
+            <div class="cta-grid">
+                <div class="cta-c cta-green">
+                    <h3>Ready to get booked?</h3>
+                    <button type="button" class="btn btn-green" onclick="startCreatorSignup()">Join as a creator ↗</button>
+                </div>
+                <div class="cta-c cta-orange">
+                    <h3>Need food content?</h3>
+                    <button type="button" class="btn btn-orange" onclick="startBusinessSignup()">Post a job ↗</button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="flogo"><span class="flogo-c">Content4</span><span class="flogo-f">Food</span></div>
+                    <p class="footer-tagline">Food content creators and businesses, one fair marketplace.</p>
+                </div>
+                <nav class="footer-links" aria-label="Policies and contact">
+                    <button type="button" class="footer-link" onclick="nav('contact', document.querySelector('[data-nav=contact]'))">Contact</button>
+                    <button type="button" class="footer-link" onclick="nav('trust-safety', null)">Trust &amp; safety</button>
+                    <button type="button" class="footer-link" onclick="nav('guidelines', null)">Guidelines</button>
+                    <button type="button" class="footer-link" onclick="nav('terms', null)">Terms</button>
+                    <button type="button" class="footer-link" onclick="nav('privacy', null)">Privacy</button>
+                </nav>
+            </div>
+            <div class="fcopy">© 2026 Content4Food LLC. All rights reserved.</div>
+        </footer>
+    </div>
+    <script type="module" src="src/js/main.js"></script>
+</body>
+</html>
